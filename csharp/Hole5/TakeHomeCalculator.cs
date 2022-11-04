@@ -6,11 +6,11 @@ namespace Hole5
 {
     public class TakeHomeCalculator
     {
-        private readonly int percent;
+        private readonly TaxRate taxRate;
 
-        public TakeHomeCalculator(int percent)
+        public TakeHomeCalculator(TaxRate taxRate)
         {
-            this.percent = percent;
+            this.taxRate = taxRate;
         }
 
         public Money NetAmount(Money first, params Money[] rest)
@@ -24,9 +24,7 @@ namespace Hole5
                 total = total.Plus(next);
             }
 
-            Double amount = total.value * (percent / 100d);
-            Money tax = Money.Create(Convert.ToInt32(amount), first.currency);
-
+            Money tax = taxRate.Apply(total);
             return total.Minus(tax);
         }
     }

@@ -13,34 +13,34 @@ namespace Hole2
             this.percent = percent;
         }
 
-        public Pair<int, String> NetAmount(Pair<int, String> first, params Pair<int, String>[] rest)
+        public Money NetAmount(Money first, params Money[] rest)
         {
-            List<Pair<int, String>> pairs = rest.ToList();
+            List<Money> monies = rest.ToList();
 
-            Pair<int, String> total = first;
+            Money total = first;
 
-            foreach (Pair<int, String> next in pairs)
+            foreach (Money next in monies)
             {
-                if (!next.second.Equals(total.second))
+                if (!next.currency.Equals(total.currency))
                 {
                     throw new Incalculable();
                 }
             }
 
-            foreach (Pair<int, String> next in pairs)
+            foreach (Money next in monies)
             {
-                total = new Pair<int, String>(total.first + next.first, next.second);
+                total = new Money(total.value + next.value, next.currency);
             }
 
-            Double amount = total.first * (percent / 100d);
-            Pair<int, String> tax = new Pair<int, String>(Convert.ToInt32(amount), first.second);
+            Double amount = total.value * (percent / 100d);
+            Money tax = new Money(Convert.ToInt32(amount), first.currency);
 
-            if (!total.second.Equals(tax.second))
+            if (!total.currency.Equals(tax.currency))
             {
                 throw new Incalculable();
             }
 
-            return new Pair<int, String>(total.first - tax.first, first.second);
+            return new Money(total.value - tax.value, first.currency);
         }
     }
 }
